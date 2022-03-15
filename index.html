@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+    <title>Hello World Simple App</title>
+</head>
+
+<body>
+    <!-- <div>Hello World!</div>
+    <button onclick="hash()">hash</button> -->
+<div class="row">
+    <div class="col s12">
+        <div class="container">
+            <div class="row">
+                <div class="col s6">
+                    <div class="row">
+                        <h4>Lav bruger for bcrypt</h4>
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="bcryptUserName" type="text" class="validate">
+                                    <label for="bcryptUserName">User Name</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="bcryptpassword" type="password" class="validate">
+                                    <label for="bcryptpassword">Password</label>
+                                </div>
+                            </div>
+                        </form>
+                        <Button onclick="hash()">Opret button</Button>
+                        <a class="waves-effect waves-light btn" id="createButton" onclick="hash">Opret</a>
+                        <h6>User name: <p id="bcryptShowUserName"></p></h6>
+                        <h6>Hash for bcrypt password: <p id="bcryptHashedPassword"></p>
+                        </h6>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="row">
+                        <h4>Login ind her</h4>
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="argonUserName" type="text" class="validate">
+                                    <label for="argonUserName">User Name</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input id="argonPassword" type="password" class="validate">
+                                    <label for="argonPassword">Password</label>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="waves-effect waves-light btn" onclick="argonHash()">Login</button>
+                        <h6>User name: <p id="argonShowUserName"></p></h6>
+                        <h6>Hash for argon password: <p id="argonHashedPassword"></p></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>
+
+<script>
+    async function hash() {
+        let bcryptUserName = document.getElementById("bcryptUserName").value
+        let bcryptGetPassword = document.getElementById("bcryptpassword").value
+        console.log(bcryptUserName)
+        console.log(bcryptGetPassword)
+
+        let bcryptShowUserName = document.getElementById("bcryptShowUserName")
+        let bcryptShowHash = document.getElementById("bcryptHashedPassword");
+
+        
+        
+        if(bcryptUserName && bcryptGetPassword){
+            
+            const result = await fetch('http://localhost:5000/bhash', {method: "POST", headers: {'content-type': 'application/json'} , body: JSON.stringify({password: bcryptGetPassword })})
+            const finalResult = await result.json();
+            console.log(finalResult);
+            
+            
+            bcryptShowUserName.innerHTML = bcryptUserName
+            
+            bcryptShowHash.innerHTML = finalResult.hash;
+        } else{
+            bcryptShowUserName.innerHTML = 'ingen værdi givet'
+
+            bcryptShowHash.innerHTML = 'ingen værdi givet'
+        }
+    }
+
+    async function bcryptVerify(){
+        const result = await fetch('http://localhost:5000/bverify', { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ verifyPassword: bcryptGetPassword }) })
+        console.log(finalResult);
+    }
+
+    async function argonHash(){
+        const argonhashtext = document.getElementById("argonPassword").value
+        console.log({password: argonhashtext})
+        const result = await fetch('http://localhost:5000/ahash', { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: argonhashtext }) })
+        const finalResult = await result.json()
+        console.log(finalResult)
+        let argonShowHash = document.getElementById("argonHashedPassword")
+        argonShowHash.innerHTML = finalResult.hash
+
+
+    }
+</script>
