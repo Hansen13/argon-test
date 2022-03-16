@@ -171,10 +171,12 @@
 
           argonHash(argonPasswordInput);
           dialogInput.innerHTML += "</br> Dit password er nu hashet med Argon2id";
+          dialogInput.innerHTML += "</br> Du er nu logget ind";
         }
       } else if (storedPassword.startsWith("$argon2id") && storedUserName === argonUserNameInput) {
         if (argonVerify(argonPasswordInput)) {
           dialogInput.innerHTML = "Dit password er nu verificeret med Argon2id";
+          dialogInput.innerHTML += "</br> Du er nu logget ind";
         }
       } else {
         dialogInput.innerHTML = "ingen bruger findes";
