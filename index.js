@@ -19,13 +19,17 @@ app.post('/bhash', (req, res) => {
 })
 
 app.post('/bverify', (req, res) => {
-    res.status(201).json({verify: bcrypt.verify(req.body.verifyPassword)})
+    res.status(201).json({verify: bcrypt.compareSync( req.body.verifyPassword, req.body.hash)})
 })
 
 app.post('/ahash', async (req, res) => {
     res.status(201).json({hash: await argon2.hash(req.body.password,{type: argon2.argon2id,memoryCost: 2** 16})})
 })
 
-app.listen(port, () => {            //server starts listening for any attempts from a client to connect at port: {port}
+app.post('/averify', (req, res) => {
+    res.status(201).json({ verify: argon2.verify(req.body.hash, req.body.verifyPassword)})
+})
+
+app.listen(port, () => { 
     console.log(`Now listening on port ${port}`); 
 });
